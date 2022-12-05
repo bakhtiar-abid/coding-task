@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-d
 import Header from './Layouts/Navbar/Header';
 import Test from './Layouts/Navbar/Test';
 import Login from './Login/Login';
+import Client from './Pages/Client/Client';
+
 
 
 function App() {
@@ -14,17 +16,15 @@ function App() {
         <AuthProvider>
            <Router>
               <Routes>
-                 {/* <PrivateRoute path="/dashboard">
-                    <Dashboard />
-                 </PrivateRoute> */}
-                 {/* <Route
-                    path="/*"
-                    element={<Navigate to="/login"></Navigate>}
-                 ></Route> */}
-                 <Route path="/navbar" element={<Header />}></Route>
+                 <Route
+                    path="/navbar"
+                    element={<Header />}
+                 ></Route>
+                
                  <Route path="/" element={<Login></Login>}></Route>
+                 <Route path='/client' element={<Client/>} ></Route>
               </Routes>
-              {/* <Footer></Footer> */}
+           
            </Router>
         </AuthProvider>
      </>

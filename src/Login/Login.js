@@ -21,7 +21,7 @@ const Login = () => {
        const [email, setEmail] = useState("");
        const [password, setPassword] = useState("");
        const [error, setError] = useState("");
-       const { signInUsingGoogle } = useAuth();
+       const { signInWithGoogle, loginUser, authError } = useAuth();
        const [isLogin, setIsLogin] = useState(false);
        const auth = getAuth();
        const location = useLocation();
@@ -29,7 +29,7 @@ const Login = () => {
        const redirect_uri = location.state?.from || "./navbar";
 
        const handleGoogleLogin = () => {
-          signInUsingGoogle().then((result) => {
+          signInWithGoogle().then((result) => {
              history(redirect_uri);
              const user = result.user;
              console.log(user);
@@ -72,12 +72,14 @@ const Login = () => {
              .then((result) => {
                 const user = result.user;
                 console.log(user);
-                setError("");
+                setError();
                 history(redirect_uri);
              })
              .catch((error) => {
                 setError(error.message);
              });
+        // loginUser(email, password, location, history);
+        // e.preventDefault();
        };
 
        const createNewUser = (email, password) => {
@@ -88,7 +90,7 @@ const Login = () => {
                 setError("");
                 verifyEmail();
                 setUserName();
-                history.push(redirect_uri);
+                history(redirect_uri);
              })
              .catch((error) => {
                 setError(error.message);
@@ -218,11 +220,11 @@ const Login = () => {
                    </button>
                 </form>
                 <br />
-                <p>Sign-In Using Google</p>
+                {/* <p>Sign-In Using Google</p>
                 <button className="btn btn-warning" onClick={handleGoogleLogin}>
                    {" "}
                    <i class="fab fa-google"></i> Google Sign-In{" "}
-                </button>
+                </button> */}
              </div>
           </div>
        </div>
