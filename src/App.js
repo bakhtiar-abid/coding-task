@@ -7,24 +7,27 @@ import Header from './Layouts/Navbar/Header';
 import Test from './Layouts/Navbar/Test';
 import Login from './Login/Login';
 import Client from './Pages/Client/Client';
+import useAuth from './hooks/useAuth';
+import Register from './Login/Register';
+import Home from './Pages/Home/Home';
 
 
 
 function App() {
+   // const { user, admin, editor, logout } = useAuth();
   return (
      <>
         <AuthProvider>
            <Router>
               <Routes>
-                 <Route
-                    path="/navbar"
-                    element={<Header />}
-                 ></Route>
-                
                  <Route path="/" element={<Login></Login>}></Route>
-                 <Route path='/client' element={<Client/>} ></Route>
+               <Route path="/home" element={<Home></Home>} ></Route>
+                 <Route
+                    path="/register"
+                    element={<Register></Register>}
+                 ></Route>
+                 <Route path="/client" element={<Client />}></Route>
               </Routes>
-           
            </Router>
         </AuthProvider>
      </>

@@ -1,234 +1,99 @@
-import React, { useState } from 'react';
-import "./Login.css"
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
+import { useState } from "react";
 
-import {
-   getAuth,
-   updateProfile,
-   createUserWithEmailAndPassword,
-   signInWithEmailAndPassword,
-   sendEmailVerification,
-   sendPasswordResetEmail,
-} from "firebase/auth";
-import initializeAuthentication from "./Firebase/firebase.init";
+import "./Login.css";
 import useAuth from './../hooks/useAuth';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-initializeAuthentication();
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
-       const [name, setName] = useState("");
-       const [email, setEmail] = useState("");
-       const [password, setPassword] = useState("");
-       const [error, setError] = useState("");
-       const { signInWithGoogle, loginUser, authError } = useAuth();
-       const [isLogin, setIsLogin] = useState(false);
-       const auth = getAuth();
-       const location = useLocation();
-       const history = useNavigate();
-       const redirect_uri = location.state?.from || "./navbar";
+   const location = useLocation();
+   const [loginData, setLoginData] = useState({});
+   const history = useNavigate();
+   const { signInWithGoogle, loginUser, authError } = useAuth();
 
-       const handleGoogleLogin = () => {
-          signInWithGoogle().then((result) => {
-             history(redirect_uri);
-             const user = result.user;
-             console.log(user);
-          });
-       };
-       const toggleLogin = (e) => {
-          setIsLogin(e.target.checked);
-       };
+   const handleGoogleSignIn = () => {
+      signInWithGoogle(location, history);
+   };
+   const handleLoginSubmit = (e) => {
+      loginUser(loginData.email, loginData.password, location, history);
+      e.preventDefault();
+   };
 
-       const hanldeNameChange = (e) => {
-          setName(e.target.value);
-       };
+   const handleOnChange = (e) => {
+      const field = e.target.name;
+      const value = e.target.value;
+      const newLoginData = { ...loginData };
+      newLoginData[field] = value;
+      setLoginData(newLoginData);
+   };
+   return (
+      <>
+         <div className="bg-image">
+            <div className="login-form d-flex justify-content-center align-items-center">
+               <Container className="login">
+                  <Row>
+                     <Col
+                        className="login-form-right text-center px-4 pt-5"
+                        md={7}
+                     >
+                        <h4 className="fw-bold">Login to your account</h4>
+                        <p>
+                           Don’t have an account?{" "}
+                           <Link to={"/register"}>
+                              <button className="border-0 bg-transparent signup-toggle-btn">
+                                 <small>Sign Up Free!</small>
+                              </button>
+                           </Link>
+                        </p>
 
-       const handleEmailChange = (e) => {
-          setEmail(e.target.value);
-       };
+                        <form onSubmit={handleLoginSubmit}>
+                           <input
+                              className="w-100 py-2 ps-3 user-input"
+                              placeholder="Email"
+                              name="email"
+                              onChange={handleOnChange}
+                              required
+                           />
+                           <br />
 
-       const hanldePasswordChange = (e) => {
-          setPassword(e.target.value);
-       };
+                           <input
+                              className="w-100 py-2 ps-3 mt-4 user-input"
+                              placeholder="Password"
+                              type="password"
+                              name="password"
+                              onChange={handleOnChange}
+                              required
+                           />
 
-       const handleRegistration = (e) => {
-          e.preventDefault();
-          console.log(email, password);
-          if (password.length < 6) {
-             setError("Password Must be at least 6 characters long.");
-             return;
-          }
-          if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
-             setError("Password Must Contain two upperCase");
-             return;
-          }
-          isLogin
-             ? processLogin(email, password)
-             : createNewUser(email, password);
-       };
-
-       const processLogin = (email, password) => {
-          signInWithEmailAndPassword(auth, email, password)
-             .then((result) => {
-                const user = result.user;
-                console.log(user);
-                setError();
-                history(redirect_uri);
-             })
-             .catch((error) => {
-                setError(error.message);
-             });
-        // loginUser(email, password, location, history);
-        // e.preventDefault();
-       };
-
-       const createNewUser = (email, password) => {
-          createUserWithEmailAndPassword(auth, email, password)
-             .then((result) => {
-                const user = result.user;
-                console.log(user);
-                setError("");
-                verifyEmail();
-                setUserName();
-                history(redirect_uri);
-             })
-             .catch((error) => {
-                setError(error.message);
-             });
-       };
-       const setUserName = () => {
-          updateProfile(auth.currentUser, {
-             displayName: name,
-             photoURL: "https://example.com/jane-q-user/profile.jpg",
-          }).then(() => {
-             // Profile updated!
-             // ...
-          });
-       };
-       const verifyEmail = () => {
-          sendEmailVerification(auth.currentUser).then((result) => {
-             console.log(result);
-          });
-       };
-
-       const handleResetPassword = () => {
-          sendPasswordResetEmail(auth, email)
-             .then((result) => {
-                // Password reset email sent!
-                // ..
-             })
-             .catch((error) => {
-                setError(error.message);
-                // ..
-             });
-       };
-
-    return (
-       <div className="bg-image">
-          <div className="container overflow-hidden">
-             <div className="my-5 mx-5 ">
-                <form onSubmit={handleRegistration}>
-                   <h3 className="text-success ">
-                      Please {isLogin ? "Login" : "Register"}{" "}
-                   </h3>
-                   {!isLogin && (
-                      <div className="row mb-3">
-                         <label
-                            for="inputAddress"
-                            className="col-sm-2 col-form-label "
-                         >
-                            Name:
-                         </label>
-                         <div className="col-sm-10 overflow-hidden">
-                            <input
-                               onBlur={hanldeNameChange}
-                               type="text"
-                               className="form-control w-50"
-                               id="inputAddress"
-                               placeholder="Your Name"
-                            />
-                         </div>
-
-                         <br />
-                      </div>
-                   )}
-                   <div className="row mb-3">
-                      <label
-                         htmlFor="inputEmail3"
-                         className="col-sm-2 col-form-label "
-                      >
-                         Email:
-                      </label>
-                      <div className="col-sm-10">
-                         <input
-                            onBlur={handleEmailChange}
-                            type="email"
-                            className="form-control  w-50"
-                            id="inputEmail3"
-                            required
-                            placeholder="Your Email"
-                         />
-                      </div>
-                   </div>
-                   <div className="row mb-3">
-                      <label
-                         htmlFor="inputPassword3"
-                         className="col-sm-2 col-form-label"
-                      >
-                         Password:
-                      </label>
-                      <div className="col-sm-10">
-                         <input
-                            onBlur={hanldePasswordChange}
-                            type="password"
-                            className="form-control  w-50"
-                            id="inputPassword3"
-                            placeholder="password"
-                            required
-                         />
-                      </div>
-                   </div>
-
-                   <div className="row mb-3">
-                      <div className="col-sm-10 offset-sm-2">
-                         <div className="form-check">
-                            <input
-                               onChange={toggleLogin}
-                               className="form-check-input"
-                               type="checkbox"
-                               id="gridCheck1"
-                            />
-                            <label
-                               className="form-check-label"
-                               htmlFor="gridCheck1"
-                            >
-                               Already Registered?
-                            </label>
-                         </div>
-                      </div>
-                   </div>
-                   <div className="row- mb-3 text-danger"> {error} </div>
-                   <button type="submit" className="btn btn-success">
-                      {isLogin ? "Login" : "Register"}
-                   </button>
-                   <button
-                      type="button"
-                      onClick={handleResetPassword}
-                      class="btn btn-secondary btn-sm ms-3 "
-                   >
-                      Reset Password
-                   </button>
-                </form>
-                <br />
-                {/* <p>Sign-In Using Google</p>
-                <button className="btn btn-warning" onClick={handleGoogleLogin}>
-                   {" "}
-                   <i class="fab fa-google"></i> Google Sign-In{" "}
-                </button> */}
-             </div>
-          </div>
-       </div>
-    );
+                           <br />
+                           <div className="text-end pt-3">
+                              <button className="border-0 bg-transparent forgot-btn">
+                                 Forgot Password?
+                              </button>
+                              {authError ? (
+                                 <div>
+                                    <small className="text-danger">
+                                       {authError}
+                                    </small>
+                                 </div>
+                              ) : (
+                                 ""
+                              )}
+                           </div>
+                           <button className="btn-success">
+                              Submit
+                           </button>
+                        </form>
+                     </Col>
+                  </Row>
+               </Container>
+            </div>
+         </div>
+      </>
+   );
 };
 
 export default Login;

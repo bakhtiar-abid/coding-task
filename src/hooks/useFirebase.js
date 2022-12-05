@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import initializeFirebase from "./../Login/Firebase/firebase.init";
+import { useLocation } from 'react-router-dom';
 
 // initialize firebase app
 initializeFirebase();
@@ -24,7 +25,9 @@ const useFirebase = () => {
    console.log("editor", editor);
    const [token, setToken] = useState("");
    const auth = getAuth();
+ 
    const googleProvider = new GoogleAuthProvider();
+   
 
    const registerUser = (email, password, name, history) => {
       setIsLoading(true);
@@ -41,7 +44,7 @@ const useFirebase = () => {
             })
                .then(() => {})
                .catch((error) => {});
-            history.replace("/");
+            history("/");
          })
          .catch((error) => {
             setAuthError(error.message);
@@ -54,8 +57,8 @@ const useFirebase = () => {
       setIsLoading(true);
       signInWithEmailAndPassword(auth, email, password)
          .then((userCredential) => {
-            const destination = location?.state?.from || "/";
-            history.replace(destination);
+            const destination = location?.state?.from || "/home";
+            history(destination);
             setAuthError("");
          })
          .catch((error) => {
@@ -72,7 +75,7 @@ const useFirebase = () => {
             saveUser(user?.email, user?.displayName, "PUT");
             setAuthError("");
             const destination = location?.state?.from || "/";
-            history.replace(destination);
+            history(destination);
          })
          .catch((error) => {
             setAuthError(error.message);
@@ -104,19 +107,20 @@ const useFirebase = () => {
          .then((data) => setAdmin(data.admin));
    }, [user.email]);
 
-   useEffect(() => {
-      fetch(
-         `https://dashboard-ecommerce-backend.vercel.app/editor/${user.email}`
-      )
-         .then((res) => res.json())
-         .then((data) => setEditor(data.editor));
-   }, [user.email]);
+   //    useEffect(() => {
+   //       fetch(
+   //          `https://dashboard-ecommerce-backend.vercel.app/editor/${user.email}`
+   //       )
+   //          .then((res) => res.json())
+   //          .then((data) => setEditor(data.editor));
+   //    }, [user.email]);
 
    const logout = () => {
       setIsLoading(true);
       signOut(auth)
          .then(() => {
             // Sign-out successful.
+            
          })
          .catch((error) => {
             // An error happened.
