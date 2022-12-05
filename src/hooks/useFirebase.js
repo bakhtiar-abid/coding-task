@@ -11,7 +11,6 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import initializeFirebase from "./../Login/Firebase/firebase.init";
-import { useLocation } from 'react-router-dom';
 
 // initialize firebase app
 initializeFirebase();
@@ -25,9 +24,8 @@ const useFirebase = () => {
    console.log("editor", editor);
    const [token, setToken] = useState("");
    const auth = getAuth();
- 
+
    const googleProvider = new GoogleAuthProvider();
-   
 
    const registerUser = (email, password, name, history) => {
       setIsLoading(true);
@@ -44,7 +42,7 @@ const useFirebase = () => {
             })
                .then(() => {})
                .catch((error) => {});
-            history("/");
+            history("/home");
          })
          .catch((error) => {
             setAuthError(error.message);
@@ -74,7 +72,7 @@ const useFirebase = () => {
             const user = result.user;
             saveUser(user?.email, user?.displayName, "PUT");
             setAuthError("");
-            const destination = location?.state?.from || "/";
+            const destination = location?.state?.from || "/home";
             history(destination);
          })
          .catch((error) => {
@@ -101,7 +99,7 @@ const useFirebase = () => {
 
    useEffect(() => {
       fetch(
-         `https://dashboard-ecommerce-backend.vercel.app/users/${user.email}`
+         `https://dashboard-ecommerce-backend-ddp3.vercel.app/users/${user.email}`
       )
          .then((res) => res.json())
          .then((data) => setAdmin(data.admin));
@@ -109,7 +107,7 @@ const useFirebase = () => {
 
    //    useEffect(() => {
    //       fetch(
-   //          `https://dashboard-ecommerce-backend.vercel.app/editor/${user.email}`
+   //          `https://dashboard-ecommerce-backend-ddp3.vercel.app/editor/${user.email}`
    //       )
    //          .then((res) => res.json())
    //          .then((data) => setEditor(data.editor));
@@ -120,7 +118,6 @@ const useFirebase = () => {
       signOut(auth)
          .then(() => {
             // Sign-out successful.
-            
          })
          .catch((error) => {
             // An error happened.
@@ -130,7 +127,7 @@ const useFirebase = () => {
 
    const saveUser = (email, displayName, method) => {
       const user = { email, displayName };
-      fetch("https://dashboard-ecommerce-backend.vercel.app/users", {
+      fetch("https://dashboard-ecommerce-backend-ddp3.vercel.app/users", {
          method: method,
          headers: {
             "content-type": "application/json",

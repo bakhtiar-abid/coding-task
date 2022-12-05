@@ -10,7 +10,7 @@ const Card = () => {
 
        useEffect(() => {
           setIsLoading(true);
-          api.get("/products")
+          api.get("/products/1")
              .then((response) => {
                 setDetails(response.data);
                 setIsLoading(false);
@@ -73,7 +73,7 @@ const Card = () => {
                             <div className="ps-5 d-flex justify-content-center align-items-center">
                                <div>
                                   <h2>{detail.title}</h2>
-                                  <p>{detail.paraghraph}</p>
+                                  <p>{detail.paragraph}</p>
                                </div>
                             </div>
                          </div>

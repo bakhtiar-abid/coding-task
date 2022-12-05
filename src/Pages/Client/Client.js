@@ -12,7 +12,7 @@ const Client = () => {
        logout();
     };
     return (
-       <div>
+       <div style={{overflow: "hidden"}}>
           <div>
              <div className="row" style={{ position: "relative" }}>
                 <Col>
@@ -30,8 +30,9 @@ const Client = () => {
                    style={{
                       position: "absolute",
                       overflow: "hidden",
-                      top: 55,
-                      left: "1000px",
+                      left: 1300,
+                      top: 60
+                      
                    }}
                 >
                    <button type="button" class="btn btn-dark" onClick={LogOut}>

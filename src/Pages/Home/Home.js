@@ -6,12 +6,10 @@ import Login from './../../Login/Login';
 
 const Home = () => {
      const { user, admin, editor, logout } = useAuth();
+     console.log(admin);
     return (
         
         user.email && !admin ? (<Client></Client>) : admin ? (<Admin/>) : <Login></Login>
-        
-        
-            
         
     );
 };

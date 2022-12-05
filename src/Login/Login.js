@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 const Login = () => {
    const location = useLocation();
    const [loginData, setLoginData] = useState({});
+   console.log(loginData);
    const history = useNavigate();
    const { signInWithGoogle, loginUser, authError } = useAuth();
 
@@ -70,9 +71,9 @@ const Login = () => {
 
                            <br />
                            <div className="text-end pt-3">
-                              <button className="border-0 bg-transparent forgot-btn">
+                              <div typ className="border-0 bg-transparent forgot-btn cursor-pointer">
                                  Forgot Password?
-                              </button>
+                              </div>
                               {authError ? (
                                  <div>
                                     <small className="text-danger">
@@ -83,7 +84,7 @@ const Login = () => {
                                  ""
                               )}
                            </div>
-                           <button type="button" class="btn btn-success">
+                           <button class="btn btn-success">
                               Login
                            </button>
                         </form>

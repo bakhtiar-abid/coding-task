@@ -4,11 +4,15 @@ import { Container } from "react-bootstrap";
 import { Upload } from "upload-js";
 import gallery from "../../Assets/Images/gallery-export.svg";
 import api from "../../hooks/useAxios";
+import useAuth from './../../hooks/useAuth';
 
 const Admin = () => {
+   const {logout} = useAuth();
    const [picUploading1, setPicUploading1] = useState(false);
    const [error, setError] = useState("");
-
+ const LogOut = () => {
+    logout();
+ };
    const [imgaeFile, setImageFile] = useState();
 
    const handleForm = useFormik({
@@ -26,9 +30,9 @@ const Admin = () => {
             values.paragraph !== "" &&
             values.img !== ""
          ) {
-            api.post("/newProduct", values).then((res) => {
+            api.post("/placeorder/1", values).then((res) => {
                if (res.data.acknowledged) {
-                alert("Submitted");
+                  alert("Submitted");
                   setError("");
                   handleForm.resetForm();
                }
@@ -142,6 +146,23 @@ const Admin = () => {
                         accept=".png, .jpg, .jpeg"
                         onChange={(event) => onFileSelected(event)}
                      />
+                  </div>
+                  <div
+                     className="container py-3"
+                     style={{
+                        position: "absolute",
+                        overflow: "hidden",
+                        left: 1300,
+                        top: 60,
+                     }}
+                  >
+                     <button
+                        type="button"
+                        class="btn btn-dark"
+                        onClick={LogOut}
+                     >
+                        Log out
+                     </button>
                   </div>
                </form>
             </div>
