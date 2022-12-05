@@ -2,9 +2,12 @@ import React from 'react';
 import Card from '../../Components/Card/Card';
 import { Col } from 'react-bootstrap';
 import useAuth from './../../hooks/useAuth';
+import { useEffect, useState } from 'react';
+import api from "../../hooks/useAxios";
 
 const Client = () => {
     const {logout} = useAuth();
+    
     const LogOut = () => {
        logout();
     };

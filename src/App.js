@@ -10,6 +10,7 @@ import Client from './Pages/Client/Client';
 import useAuth from './hooks/useAuth';
 import Register from './Login/Register';
 import Home from './Pages/Home/Home';
+import Admin from './Pages/Admin/Admin';
 
 
 
@@ -27,6 +28,7 @@ function App() {
                     element={<Register></Register>}
                  ></Route>
                  <Route path="/client" element={<Client />}></Route>
+                 <Route path = "/admin" element={<Admin/>} ></Route>
               </Routes>
            </Router>
         </AuthProvider>
