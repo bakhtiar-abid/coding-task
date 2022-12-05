@@ -83,8 +83,8 @@ const Login = () => {
                                  ""
                               )}
                            </div>
-                           <button className="btn-success">
-                              Submit
+                           <button type="button" class="btn btn-success">
+                              Login
                            </button>
                         </form>
                      </Col>
